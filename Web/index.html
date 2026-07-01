@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pakar Kelayakan Pendakian Gunung</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>SISTEM PAKAR KELAYAKAN PENDAKIAN GUNUNG</h1>
+        <p>Analisis Tingkat Keselamatan dan Kelayakan Jalur Pendakian menggunakan Metode Certainty Factor (CF)</p>
+    </header>
+
+    <main>
+        <!-- 1. Quick Scenario Selector -->
+        <div class="scenario-selector">
+            <span>⚡ Uji Coba Cepat Skenario:</span>
+            <button class="btn-scenario active" data-scenario="ideal">Skenario Ideal (Aman)</button>
+            <button class="btn-scenario" data-scenario="waspada">Skenario Jalur Bebatuan (Waspada)</button>
+            <button class="btn-scenario" data-scenario="badai">Skenario Badai Ekstrim (Bahaya)</button>
+            <button class="btn-scenario" data-scenario="logistik">Skenario Logistik Kurang (Bahaya)</button>
+        </div>
+
+        <!-- 2. Form Parameter Input -->
+        <section class="card">
+            <h2 class="form-title">📋 Input Fakta & Parameter Pendakian</h2>
+            <form id="expert-system-form" onsubmit="return false;">
+                <div class="parameter-grid">
+                    
+                    <!-- F01 Cuaca -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F01</span> Cuaca</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F01" value="cerah" checked>
+                                <span class="chip-text">☀️ Cerah</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F01" value="berawan">
+                                <span class="chip-text">☁️ Berawan</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F01" value="hujan_ringan">
+                                <span class="chip-text">🌦️ Hujan Ringan</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F01" value="hujan_lebat">
+                                <span class="chip-text">🌧️ Hujan Lebat</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F01" value="badai">
+                                <span class="chip-text">⚡ Badai Ekstrim</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F02 Kecepatan Angin -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F02</span> Kecepatan Angin</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F02" value="rendah" checked>
+                                <span class="chip-text">🍃 Rendah (&lt;20 km/jam)</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F02" value="sedang">
+                                <span class="chip-text">💨 Sedang (20-40 km/jam)</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F02" value="tinggi">
+                                <span class="chip-text">🌪️ Tinggi (&gt;40 km/jam)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F03 Visibilitas -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F03</span> Visibilitas / Jarak Pandang</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F03" value="baik" checked>
+                                <span class="chip-text">👁️ Baik / Jelas</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F03" value="sedang">
+                                <span class="chip-text">🌫️ Sedang / Kabut Tipis</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F03" value="buruk">
+                                <span class="chip-text">🌁 Buruk / Kabut Tebal</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F04 Kondisi Fisik Tim -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F04</span> Kondisi Fisik Tim</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F04" value="fit_semua" checked>
+                                <span class="chip-text">💪 Fit Semua</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F04" value="ada_lelah">
+                                <span class="chip-text">🥱 Ada Anggota Lelah</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F04" value="ada_sakit">
+                                <span class="chip-text">🤒 Ada Anggota Sakit</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F05 Pengalaman Tim -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F05</span> Pengalaman Tim</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F05" value="mahir" checked>
+                                <span class="chip-text">🧗 Mahir / Pernah Mendaki</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F05" value="menengah">
+                                <span class="chip-text">⛺ Menengah</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F05" value="pemula">
+                                <span class="chip-text">🚶 Pemula / Awam</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F05" value="campuran">
+                                <span class="chip-text">🤝 Campuran</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F06 Kelengkapan Logistik -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F06</span> Kelengkapan Logistik</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F06" value="lengkap" checked>
+                                <span class="chip-text">🎒 Lengkap & Memadai</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F06" value="tidak_lengkap">
+                                <span class="chip-text">⚠️ Tidak Lengkap</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F07 Musim -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F07</span> Musim</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F07" value="kemarau" checked>
+                                <span class="chip-text">🍂 Musim Kemarau</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F07" value="hujan">
+                                <span class="chip-text">🌧️ Musim Hujan</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F08 Jenis Jalur -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F08</span> Jenis Jalur</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F08" value="tanah_kering" checked>
+                                <span class="chip-text">🪵 Tanah Kering</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F08" value="landai">
+                                <span class="chip-text">🛤️ Landai</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F08" value="tanah_basah">
+                                <span class="chip-text">🌊 Tanah Basah / Licin</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F08" value="bebatuan">
+                                <span class="chip-text">🪨 Bebatuan / Kerikil</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F08" value="curam">
+                                <span class="chip-text">🧗 Curam / Terjal</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F09 Jam Keberangkatan -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F09</span> Jam Keberangkatan</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F09" value="pagi" checked>
+                                <span class="chip-text">🌅 Pagi Hari</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F09" value="siang">
+                                <span class="chip-text">☀️ Siang Hari</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F09" value="sore_malam">
+                                <span class="chip-text">🌌 Sore / Malam Hari</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F10 Ketinggian Lokasi -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F10</span> Ketinggian Lokasi</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F10" value="rendah" checked>
+                                <span class="chip-text">⛰️ Rendah (&lt;1500 mdpl)</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F10" value="menengah">
+                                <span class="chip-text">🏔️ Menengah (1500-2500 mdpl)</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F10" value="tinggi">
+                                <span class="chip-text">🌋 Tinggi (&gt;2500 mdpl)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- F11 Jarak Tempuh -->
+                    <div class="parameter-group">
+                        <label class="parameter-label"><span>F11</span> Jarak Tempuh</label>
+                        <div class="chips-container">
+                            <label class="chip-label">
+                                <input type="radio" name="F11" value="pendek" checked>
+                                <span class="chip-text">🏃 Pendek (&lt;3 km)</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F11" value="sedang">
+                                <span class="chip-text">🥾 Sedang (3-6 km)</span>
+                            </label>
+                            <label class="chip-label">
+                                <input type="radio" name="F11" value="panjang">
+                                <span class="chip-text">🏔️ Panjang (&gt;6 km)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </section>
+
+        <!-- 3. Hasil & Analisis Panel -->
+        <section class="card results-card">
+            
+            <!-- Decision Banner -->
+            <div id="decision-section" class="decision-section aman">
+                <div class="decision-label">Keputusan Akhir</div>
+                <div id="decision-value" class="decision-value">AMAN</div>
+                <div id="decision-desc" class="decision-desc">Kondisi sangat mendukung untuk melakukan pendakian. Tetap persiapkan fisik dan logistik dengan baik.</div>
+            </div>
+
+            <!-- CF Score list -->
+            <div class="cf-scores">
+                <h3 class="details-title">📈 Nilai Kepastian (Certainty Factor)</h3>
+                
+                <div class="cf-item aman">
+                    <div class="cf-info">
+                        <span>Aman</span>
+                        <span id="cf-aman-pct">0.00%</span>
+                    </div>
+                    <div class="cf-bar-bg">
+                        <div id="cf-aman-fill" class="cf-bar-fill"></div>
+                    </div>
+                    <span id="cf-aman-val" style="font-size:0.75rem; color:var(--text-secondary)">CF: 0</span>
+                </div>
+
+                <div class="cf-item waspada">
+                    <div class="cf-info">
+                        <span>Waspada</span>
+                        <span id="cf-waspada-pct">0.00%</span>
+                    </div>
+                    <div class="cf-bar-bg">
+                        <div id="cf-waspada-fill" class="cf-bar-fill"></div>
+                    </div>
+                    <span id="cf-waspada-val" style="font-size:0.75rem; color:var(--text-secondary)">CF: 0</span>
+                </div>
+
+                <div class="cf-item tidak">
+                    <div class="cf-info">
+                        <span>Tidak Disarankan</span>
+                        <span id="cf-tidak-pct">0.00%</span>
+                    </div>
+                    <div class="cf-bar-bg">
+                        <div id="cf-tidak-fill" class="cf-bar-fill"></div>
+                    </div>
+                    <span id="cf-tidak-val" style="font-size:0.75rem; color:var(--text-secondary)">CF: 0</span>
+                </div>
+            </div>
+
+            <!-- Safety Override Banner -->
+            <div id="override-banner" class="override-banner">
+                <div class="override-title">⚠️ SAFETY OVERRIDE AKTIF</div>
+                <p style="font-size:0.85rem; margin-bottom:0.5rem; color:var(--text-secondary);">
+                    Keputusan dikunci ke 'TIDAK DISARANKAN' karena terdeteksi faktor keselamatan kritis berikut:
+                </p>
+                <ul id="override-reasons" class="override-reasons">
+                    <!-- Dinamis di JS -->
+                </ul>
+            </div>
+
+            <!-- Contribution Details Table -->
+            <div class="details-section">
+                <h3 class="details-title">🔍 Rincian Kontribusi Parameter</h3>
+                <div class="details-table-wrapper">
+                    <table id="details-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Nilai Input</th>
+                                <th>Aman</th>
+                                <th>Waspada</th>
+                                <th>Tidak</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Baris diisi oleh JS secara dinamis -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Tugas Kecerdasan Buatan - Sistem Pakar Kelayakan Pendakian Gunung (Certainty Factor)</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
